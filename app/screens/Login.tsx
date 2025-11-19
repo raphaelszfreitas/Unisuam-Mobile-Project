@@ -30,8 +30,7 @@ const Login = ({
     if (user && onBackToMenu) {
       onBackToMenu();
     }
-    // eslint-disable-next-line
-  }, [user]);
+  }, [user, onBackToMenu]);
 
   return (
     <View style={styles.container}>
@@ -70,7 +69,7 @@ const Login = ({
               );
               login({ name: result.user.name, email: result.user.email });
               if (redirectTimeout) clearTimeout(redirectTimeout);
-              const timeout = window.setTimeout(() => {
+              const timeout = setTimeout(() => {
                 if (onBackToMenu) onBackToMenu();
               }, 1500);
               setRedirectTimeout(timeout);

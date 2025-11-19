@@ -7,6 +7,7 @@ import { ThemedView } from "../../components/themed-view";
 import ThemedInput from "../../components/ThemedInput";
 
 import { useAuth } from "../context/AuthContext";
+import Statistics from "./Statistics";
 
 const COLORS = [
   // Brancos e beges
@@ -51,14 +52,15 @@ const COLORS = [
   "#90A4AE", // cinza claro
   "#607D8B", // cinza azulado
   // Preto
-  "#212121", // preto
+  "#333333", // preto
 ];
 
 type Props = {
   onBackToMenu?: () => void;
+  onShowStats?: () => void;
 };
 
-const UserProfile = ({ onBackToMenu }: Props) => {
+const UserProfile = ({ onBackToMenu, onShowStats }: Props) => {
   const { user, login, logout } = useAuth();
   const [nickname, setNickname] = useState(user?.name || "");
   const [selectedColor, setSelectedColor] = useState(() => {
@@ -67,6 +69,7 @@ const UserProfile = ({ onBackToMenu }: Props) => {
   });
   const [colorModalVisible, setColorModalVisible] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [statisticsModalVisible, setStatisticsModalVisible] = useState(false);
 
   return (
     <ThemedView style={styles.container}>
@@ -175,10 +178,15 @@ const UserProfile = ({ onBackToMenu }: Props) => {
       <PrimaryButton
         title="Ver Estatísticas"
         onPress={() => {
-          /* TODO: Navegar para estatísticas */
+          setStatisticsModalVisible(true);
         }}
         style={styles.primaryButton}
         textStyle={styles.primaryButtonText}
+      />
+
+      <Statistics
+        visible={statisticsModalVisible}
+        onClose={() => setStatisticsModalVisible(false)}
       />
 
       <PrimaryButton

@@ -1,9 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 export type User = {
   name: string;
   email: string;
+  // optional color chosen by the user for their pieces (e.g., "#C8A24B" or "red")
+  pieceColor?: string | null;
 };
 
 interface AuthContextType {
@@ -19,18 +27,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // Restaurar usuário salvo ao iniciar o app
-    AsyncStorage.getItem('loggedUser').then(data => {
+    AsyncStorage.getItem("loggedUser").then((data) => {
       if (data) setUser(JSON.parse(data));
     });
   }, []);
 
   const login = (userData: User) => {
     setUser(userData);
-    AsyncStorage.setItem('loggedUser', JSON.stringify(userData));
+    AsyncStorage.setItem("loggedUser", JSON.stringify(userData));
   };
   const logout = () => {
     setUser(null);
-    AsyncStorage.removeItem('loggedUser');
+    AsyncStorage.removeItem("loggedUser");
   };
 
   return (
@@ -42,6 +50,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };

@@ -3,21 +3,29 @@ import { StyleSheet, View } from "react-native";
 import PrimaryButton from "../../components/PrimaryButton";
 import { ThemedText } from "../../components/themed-text";
 import VolumeSlider from "../../components/VolumeSlider";
+import { useAudio } from "../context/AudioContext";
 import { useAuth } from "../context/AuthContext";
+import useBackgroundMusic from "../hooks/useBackgroundMusic";
 import DifficultySelect from "./DifficultySelect";
 import Login from "./Login";
 import PlayerVsBot from "./PlayerVsBot";
 import PlayerVsPlayer from "./PlayerVsPlayer";
 import Register from "./Register";
+import Statistics from "./Statistics";
 import UserProfile from "./UserProfile";
 
 const MainMenu = () => {
-  const [volume, setVolume] = useState(0.5);
+  const { volume, setVolume } = useAudio();
   const [screen, setScreen] = useState<
     "menu" | "bot" | "pvp" | "login" | "register" | "difficulty" | "profile"
   >("menu");
+  const [showStatsModal, setShowStatsModal] = useState(false);
   const [botDifficulty, setBotDifficulty] = useState<string | null>(null);
   const { user } = useAuth();
+
+  // background music for menu (uses global volume)
+  const menuAsset = require("../../assets/audio/menu.mp3");
+  useBackgroundMusic(menuAsset, screen === "menu", volume);
 
   if (screen === "bot") {
     return (
@@ -53,7 +61,18 @@ const MainMenu = () => {
     return <Register onBackToLogin={() => setScreen("login")} />;
   }
   if (screen === "profile") {
-    return <UserProfile onBackToMenu={() => setScreen("menu")} />;
+    return (
+      <View style={{ flex: 1 }}>
+        <UserProfile
+          onBackToMenu={() => setScreen("menu")}
+          onShowStats={() => setShowStatsModal(true)}
+        />
+        <Statistics
+          visible={showStatsModal}
+          onClose={() => setShowStatsModal(false)}
+        />
+      </View>
+    );
   }
 
   return (

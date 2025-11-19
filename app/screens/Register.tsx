@@ -75,7 +75,7 @@ const Register = ({ onBackToLogin }: { onBackToLogin?: () => void }) => {
               setPassword("");
               setRepeatPassword("");
               if (redirectTimeout) clearTimeout(redirectTimeout);
-              const timeout = window.setTimeout(() => {
+              const timeout = setTimeout(() => {
                 if (onBackToLogin) onBackToLogin();
               }, 1500);
               setRedirectTimeout(timeout);
